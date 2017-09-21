@@ -1,9 +1,12 @@
 package example.kliment.com.poc_usb_storage;
 
 import android.content.Context;
+import android.os.Environment;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -89,6 +92,28 @@ public class FileUtils {
         destination.close();
       }
     }
+  }
+
+  public static byte[] readFile(String encryptedFileName) {
+    byte[] contents = null;
+
+    File file = new File(Environment.getExternalStorageDirectory()
+        + File.separator, encryptedFileName);
+    int size = (int) file.length();
+    contents = new byte[size];
+    try {
+      BufferedInputStream buf = new BufferedInputStream(
+          new FileInputStream(file));
+      try {
+        buf.read(contents);
+        buf.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    return contents;
   }
 
 }
